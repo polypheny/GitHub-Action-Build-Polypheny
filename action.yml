@@ -1,0 +1,25 @@
+name: Build Polypheny
+description: Build a Polypheny JAR
+inputs:
+  branch:
+    description: Polypheny repository ref to checkout
+    required: false
+    default: 'master'
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-java@v4
+      with:
+        distributions: 'temurin'
+        java-version: '17'
+    - uses: actions/checkout@v4
+      with:
+        repository: polypheny/Polypheny-DB
+        ref: ${{ inputs.branch }}
+    - run: ./gradlew build -x test -x licensee
+    - run: ./gradlew build -x test -x licensee
+    - run: 'cd dbms/build/libs/ && mv *.jar polypheny.jar'
+    - uses: actions/upload-artifact@v4
+      with:
+        name: polypheny-jar
+        path: dbms/build/libs/polypheny.jar
