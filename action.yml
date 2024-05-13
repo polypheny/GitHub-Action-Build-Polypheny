@@ -17,8 +17,11 @@ runs:
         repository: polypheny/Polypheny-DB
         ref: ${{ inputs.branch }}
     - run: ./gradlew build -x test -x licensee
+      shell: bash
     - run: ./gradlew build -x test -x licensee
+      shell: bash
     - run: 'cd dbms/build/libs/ && mv *.jar polypheny.jar'
+      shell: bash
     - uses: actions/upload-artifact@v4
       with:
         name: polypheny-jar
